@@ -1,5 +1,8 @@
+/**
+ * 加载中组件
+ */
 export const pending = (
-  <div class="h-[calc(100vh-60px)] flex items-center justify-center text-center">
+  <div class=" absolute inset-0	 overflow-hidden  flex items-center justify-center text-center">
     <svg
       class="animate-spin h-10 w-10 inline-block text-primary"
       xmlns="http://www.w3.org/2000/svg"

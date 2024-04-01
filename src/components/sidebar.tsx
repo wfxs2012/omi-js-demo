@@ -1,6 +1,8 @@
 import { tag, Component, classNames, bind } from 'omi'
 import { createPopper } from '@popperjs/core'
 import { Router } from 'omi-router'
+import { ChevronDown } from 'lucide-omi'
+import { Icons } from './icons.tsx'
 
 interface ComponentWithRouter extends Sidebar {
   router?: Router
@@ -29,6 +31,9 @@ type Props = {
   isOpen: boolean
 }
 
+/**
+ * 左侧菜单栏组件
+ */
 @tag('o-sidebar')
 export class Sidebar extends Component<Props> {
   static css = `
@@ -120,9 +125,9 @@ export class Sidebar extends Component<Props> {
       <li
         onClick={() => this.select(child)}
         class={classNames(
-          'py-1 h-9 indent-10 rounded hover:bg-accent flex items-center text-sm text-zinc-500 dark:text-zinc-200 cursor-pointer',
+          'py-1 h-9 indent-10 rounded hover:bg-zinc-100 flex items-center text-sm text-zinc-500 dark:text-zinc-200 cursor-pointer',
           {
-            'bg-accent': this.state.active === child.value,
+            'bg-zinc-100': this.state.active === child.value,
           },
         )}
       >
@@ -135,7 +140,7 @@ export class Sidebar extends Component<Props> {
 
   renderToolTipChild(child: SidebarItem) {
     return (
-      <li class="py-1 h-9 px-3 rounded hover:bg-accent flex items-center text-sm text-zinc-500 dark:text-zinc-200">
+      <li class="py-1 h-9 px-3 rounded hover:bg-zinc-100 flex items-center text-sm text-zinc-500 dark:text-zinc-200">
         <a href={child.href} class="flex items-center space-x-2 whitespace-nowrap">
           <span>{child.text}</span>
         </a>
@@ -145,109 +150,92 @@ export class Sidebar extends Component<Props> {
 
   render() {
     return (
-      <div class="h-screen flex">
+      <section class=" flex">
         <div
           class={classNames('bg-background text-foreground transition-all p-2 flex flex-col justify-between', {
             'w-60': this.state.isOpen,
             'w-16': !this.state.isOpen,
           })}
         >
-          <div>
-            <div class={classNames('flex items-center h-[50px] space-x-2 justify-center')}>
-              <i class="h-8 w-8">
-                <img src="https://omi.cdn-go.cn/admin/latest/home/omi.svg"></img>
-              </i>
-              <h1
-                class={classNames('text-2xl font-semibold whitespace-nowrap', {
-                  block: this.state.isOpen,
-                  hidden: !this.state.isOpen,
-                })}
-              >
-                OMI Admin
-              </h1>
-            </div>
-            <div
-              class={classNames('mb-2', {
+          {/* logo */}
+          <header class={classNames('flex items-center h-[50px] space-x-2 justify-center')}>
+            <i class="h-8 w-8">
+              <img src="https://omi.cdn-go.cn/admin/latest/home/omi.svg"></img>
+            </i>
+            <h1
+              class={classNames('text-black text-2xl font-semibold whitespace-nowrap', {
                 block: this.state.isOpen,
                 hidden: !this.state.isOpen,
               })}
             >
-              <input type="text" placeholder="Search" class="px-3 w-full p-1 border rounded" />
-            </div>
-            <nav class="h-[calc(100vh-300px)] overflow-auto">
-              <ul>
-                {this.props.items.map((item: SidebarItem) => {
-                  const hasChildren = !!(item.children && item.children.length)
-                  return (
-                    <li>
-                      <a
-                        href={hasChildren ? 'javascript:' : item.href}
-                        onClick={() => this.onItemClick(item)}
-                        onMouseEnter={() => this.onMouseEnter(item)}
-                        onMouseLeave={() => this.onMouseLeave(item)}
-                        class={classNames('trigger flex items-center  hover:bg-accent h-9 rounded px-2', {
-                          'justify-between': this.state.isOpen,
-                          'justify-center': !this.state.isOpen,
-                        })}
+              OMI Admin
+            </h1>
+          </header>
+          {/* 菜单 */}
+          <nav class="flex-1 overflow-auto">
+            <ul>
+              {this.props.items.map((item: SidebarItem) => {
+                const hasChildren = !!(item.children && item.children.length)
+                return (
+                  <li>
+                    <a
+                      href={hasChildren ? 'javascript:' : item.href}
+                      onClick={() => this.onItemClick(item)}
+                      onMouseEnter={() => this.onMouseEnter(item)}
+                      onMouseLeave={() => this.onMouseLeave(item)}
+                      class={classNames('trigger flex items-center  hover:bg-zinc-100 h-9 rounded px-2', {
+                        'justify-between': this.state.isOpen,
+                        'justify-center': !this.state.isOpen,
+                      })}
+                    >
+                      <div class="flex items-center space-x-2 text-zinc-600 dark:text-zinc-200">
+                        {/*左侧图标*/}
+                        <Icons icon={item.icon} />
+                        {/*菜单名称*/}
+                        {this.state.isOpen && <span class="text-sm">{item.text}</span>}
+                      </div>
+                      {/*小屏幕弹窗菜单*/}
+                      <ul
+                        class="p-1 border tip hidden overflow-hidden bg-background dark:bg-zinc-800 rounded shadow-md"
+                        style={{
+                          opacity: this.state.isOpen ? '0' : '1',
+                        }}
                       >
-                        <div class="flex items-center space-x-2 text-zinc-600 dark:text-zinc-200">
-                          <i class={`t-icon t-icon-${item.icon} text-xl`}></i>
-                          {this.state.isOpen && <span class="text-sm">{item.text}</span>}
-                        </div>
-                        <ul
-                          class="p-1 border tip hidden overflow-hidden bg-background dark:bg-zinc-800 rounded shadow-md"
-                          style={{
-                            opacity: this.state.isOpen ? '0' : '1',
-                          }}
-                        >
-                          {item.children.map((child: SidebarItem) => {
-                            return this.renderToolTipChild(child)
-                          })}
-                        </ul>
-
-                        {hasChildren && this.state.isOpen && (
-                          <i
-                            class={classNames(
-                              't-icon text-xl t-icon-chevron-down text-zinc-500 dark:text-zinc-300 transition-all',
-                              {
-                                'rotate-0': !item.isOpen,
-                                'rotate-180': item.isOpen,
-                              },
-                            )}
-                          ></i>
-                        )}
-                      </a>
+                        {item.children.map((child: SidebarItem) => {
+                          return this.renderToolTipChild(child)
+                        })}
+                      </ul>
+                      {/* 打开关闭图标 */}
                       {hasChildren && this.state.isOpen && (
-                        <ul
-                          class="transition-all overflow-hidden"
-                          style={{
-                            height: item.isOpen ? item.childrenHeight + 'px' : '0',
-                          }}
-                        >
-                          {item.children.map((child: SidebarItem) => {
-                            return this.renderChild(child)
+                        <ChevronDown
+                          size="18"
+                          class={classNames('transition-all text-zinc-500', {
+                            'rotate-0': !item.isOpen,
+                            'rotate-180': item.isOpen,
                           })}
-                        </ul>
+                        />
                       )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </nav>
-          </div>
-          {this.state.isOpen && (
-            <div class="bg-primary text-white rounded p-4 w-56">
-              <h2 class="font-semibold mb-2">重点公告位</h2>
-              <p class="text-sm mb-4">
-                公告信息，公告信息，公告信息，公告信息，公告信息，公告信息，公告信息，公告信息，公告信息，公告信息，。
-              </p>
-              <button class="bg-background text-primary dark:bg-white dark:text-primary px-2 py-0.5 text-sm rounded">
-                知道了
-              </button>
-            </div>
-          )}
+                    </a>
+                    {/* 大屏幕菜单 */}
+                    {hasChildren && this.state.isOpen && (
+                      <ul
+                        class="transition-all overflow-hidden"
+                        style={{
+                          height: item.isOpen ? item.childrenHeight + 'px' : '0',
+                        }}
+                      >
+                        {item.children.map((child: SidebarItem) => {
+                          return this.renderChild(child)
+                        })}
+                      </ul>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
         </div>
-      </div>
+      </section>
     )
   }
 }

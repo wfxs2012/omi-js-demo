@@ -1,12 +1,11 @@
 import { classNames, Component, tag, VNode } from 'omi'
 import { activeMenuItem, activeSidebarItem, isSidebarOpen, navbarItems, sidebarItems } from '../store.ts'
 import '@/components/sidebar'
+
 /* Because the menu needs to update user avatars, a separate component is packaged for local updates */
 @tag('sidebar-wrpapper')
 export class SidebarWrapper extends Component {
   render() {
-    console.log(sidebarItems.value)
-
     return (
       <o-sidebar
         onChange={(evt: CustomEvent) => (activeSidebarItem.value = evt.detail.item.value)}
@@ -14,24 +13,27 @@ export class SidebarWrapper extends Component {
         active={activeSidebarItem.value}
         isOpen={isSidebarOpen.value}
         onInstalled={() => {}}
-      ></o-sidebar>
+      />
     )
   }
 }
 
 export function AdminLayout(props: { current?: string; children?: VNode | VNode[] }) {
   return (
-    <div class="flex h-screen">
-      <div
+    <article class="flex h-screen ">
+      <section
         class={classNames(' text-white flex flex-col transition-all', {
           'w-60': isSidebarOpen.value,
           'w-16': !isSidebarOpen.value,
         })}
       >
-        <sidebar-wrpapper></sidebar-wrpapper>
-      </div>
-      <div class="flex-1 overflow-auto bg-background text-foreground border-l">
-        <header class="shadow py-2 px-4">
+        <sidebar-wrpapper />
+      </section>
+
+      {/*  右侧 */}
+      <section class="flex-1 flex flex-col overflow-auto bg-background text-foreground border-l">
+        {/*  头部菜单 */}
+        <header class="shadow py-2 px-4 sticky	">
           <div class="flex items-center justify-between">
             <button
               class="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-zinc-600"
@@ -55,11 +57,11 @@ export function AdminLayout(props: { current?: string; children?: VNode | VNode[
             <o-navbar items={navbarItems.value} value={activeMenuItem.value} onInstalled={() => {}}></o-navbar>
           </div>
         </header>
-        <main class="p-4">
-          right content
-          {props.children}
-        </main>
-      </div>
-    </div>
+        {/*  内容区*/}
+        <div class="p-4 relative flex-1 ">
+          <div class=" absolute inset-0 overflow-y-auto overflow-x-hidden">{props.children}</div>
+        </div>
+      </section>
+    </article>
   )
 }

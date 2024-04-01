@@ -1,13 +1,12 @@
 import 'omi-suspense'
-import './index.css'
 import { Router } from 'omi-router'
 import { AdminLayout } from './layout/layout.tsx'
-import { Component } from 'omi'
 import { pending } from './components/pending.tsx'
 import { fallback } from './components/fallback.tsx'
+import './components/appear.tsx'
 
 export const routes = [
-  createAdminRoute('/', () => import('./home-page')),
+  createAdminRoute('/', () => import('./pages/home')),
   {
     path: '*',
     render() {
@@ -23,16 +22,13 @@ function createAdminRoute(path: string, componentImport: () => Promise<unknown>)
       return (
         <AdminLayout current={router.currentRoute?.path}>
           <o-suspense
-            minLoadingTime={400}
             imports={[componentImport()]}
             customRender={(results: { [x: string]: Function }[]) => {
               const Module = results[0][Object.keys(results[0])[0]]
               return (
                 <o-appear
-                  class="opacity-0 translate-y-4"
+                  class="opacity-0 translate-y-4 "
                   onReady={() => {
-                    // @ts-ignore
-                    window.refreshDark()
                     window.scrollTo(0, 0)
                   }}
                 >
@@ -41,16 +37,12 @@ function createAdminRoute(path: string, componentImport: () => Promise<unknown>)
               )
             }}
             fallback={fallback}
-            beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4')
-              return new Promise((resolve) => setTimeout(resolve, 300))
-            }}
+            // beforePending={async (suspense: Component) => {
+            //   suspense.shadowRoot?.firstElementChild?.classList.add('beforePending', 'opacity-0', 'translate-y-4')
+            //   return new Promise((resolve) => setTimeout(resolve, 300))
+            // }}
             pending={pending}
-            onLoaded={() => {
-              // @ts-ignore
-              window.refreshDark()
-            }}
-          ></o-suspense>
+          />
         </AdminLayout>
       )
     },

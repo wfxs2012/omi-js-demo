@@ -1,8 +1,8 @@
-import { signal } from "omi"
+import { signal } from 'omi'
 
-export const userState = signal<{ name: string, age: number }>({
+export const userState = signal<{ name: string; age: number }>({
   name: '',
-  age: 0
+  age: 0,
 })
 
 interface NavbarItem {
@@ -174,14 +174,9 @@ export const sidebarItems = signal<NavbarItem[]>([
     isOpen: true,
     children: [
       {
-        text: '概览仪表盘',
+        text: '按鈕',
         value: 'dashboard',
-        href: '#/admin/home',
-      },
-      {
-        text: '统计报表',
-        value: 'chart',
-        href: '#/admin/chart',
+        href: '/',
       },
     ],
     tag: '',
@@ -239,8 +234,6 @@ export const sidebarItems = signal<NavbarItem[]>([
 ])
 
 export const isSidebarOpen = signal(true)
-
-
 
 const value = getValueByPath(location.hash.slice(1), navbarItems.value)
 export const activeMenuItem = signal(value || 'home')

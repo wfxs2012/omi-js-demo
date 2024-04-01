@@ -1,3 +1,6 @@
+/**
+ * 回退组件
+ */
 export const fallback = (
   <div class="flex items-center justify-center bg-zinc-100" style="height:calc(100vh - 349px)">
     <div class="p-8  text-center">

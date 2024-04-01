@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "lucide-omi": "^0.0.6",
     "omi": "latest",
+    "omi-elements": "latest",
+    "omi-ripple": "^0.1.2",
     "omi-router": "latest",
-    "omi-suspense": "latest",
-    "omiu": "^0.1.0-alpha8"
+    "omi-suspense": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
@@ -24,6 +26,7 @@
     "prettier": "3.0.3",
     "sass": "^1.55.0",
     "tailwindcss": "^3.3.3",
+    "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
