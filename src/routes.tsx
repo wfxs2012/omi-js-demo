@@ -7,6 +7,7 @@ import './components/appear.tsx'
 
 export const routes = [
   createAdminRoute('/', () => import('./pages/home')),
+  createAdminRoute('/list', () => import('./pages/list')),
   {
     path: '*',
     render() {

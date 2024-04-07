@@ -187,6 +187,8 @@ export const sidebarItems = signal<NavbarItem[]>([
     children: [
       {
         text: '基础列表',
+        value: 'dashboard',
+        href: '/list',
       },
       {
         text: '卡片列表',
